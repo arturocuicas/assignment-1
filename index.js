@@ -1,6 +1,7 @@
 /*
-*
-*
+* Arturo Cuicas
+* 29/07/18
+* Main config for API Restfull Server
 */
 
 // Dependencies
@@ -21,7 +22,6 @@ httpServer.listen(config.httpPort, () => {
   console.log(`The server is listening on port ${ config.httpPort }`);
 });
 
-
 // Instantiate the HTTPS Server
 let httpsServerOptions = {
   'key': fs.readFileSync('./https/key.pem'),
@@ -40,25 +40,19 @@ httpsServer.listen(config.httpsPort, () => {
 let unifiedServer = (req, res) => {
   // Get the URL and parse it
   let parsedUrl = url.parse(req.url, true);
-  console.log(parsedUrl);
 
   // Get the Path
   let path = parsedUrl.pathname;
-  console.log(path);
   let trimmedPath = path.replace(/^\/+|\/+$/g,'');
-  console.log(trimmedPath);
 
   // Get the Query String as an object
   let queryStringObject = parsedUrl.query;
-  console.log(queryStringObject);
 
   // Get the HTTP Method
   let method = req.method.toLowerCase();
-  console.log(method);
 
   // Get the Headers as an object
   let headers = req.headers;
-  console.log(headers);
 
   // Get the Payload, if any
   let decoder = new StringDecoder('utf-8');
@@ -70,7 +64,6 @@ let unifiedServer = (req, res) => {
 
   req.on('end', () => {
     buffer += decoder.end();
-    console.log(`The buffer: ${ buffer }`);
 
     // Choose the handler this request should go to. If one is not found use notFound handler
     let chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
@@ -100,7 +93,6 @@ let unifiedServer = (req, res) => {
       res.writeHead(statusCode);
       res.end(payloadString)
       console.log(`Returning this response: ${ statusCode } ${ payloadString }`);
-
     });
 
   });
